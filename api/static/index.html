@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KisanMITRA Health</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; margin: 2rem; }
+      .card { max-width: 560px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+      .ok { color: #0a7f2e; }
+      .bad { color: #b91c1c; }
+      code { background: #f3f4f6; padding: 2px 6px; border-radius: 6px; }
+      a { color: #2563eb; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>KisanMITRA API</h1>
+      <p>Quick health check and links.</p>
+      <p>
+        API Docs: <a href="/docs">/docs</a>
+      </p>
+      <hr />
+      <p><strong>Status:</strong> <span id="status">Checking…</span></p>
+      <pre id="json" style="white-space: pre-wrap"></pre>
+    </div>
+    <script>
+      async function checkHealth() {
+        const statusEl = document.getElementById('status');
+        const jsonEl = document.getElementById('json');
+        try {
+          const res = await fetch('/health');
+          const data = await res.json();
+          statusEl.textContent = data.status === 'ok' ? 'OK' : 'Unknown';
+          statusEl.className = data.status === 'ok' ? 'ok' : 'bad';
+          jsonEl.textContent = JSON.stringify(data, null, 2);
+        } catch (e) {
+          statusEl.textContent = 'DOWN';
+          statusEl.className = 'bad';
+          jsonEl.textContent = String(e);
+        }
+      }
+      checkHealth();
+    </script>
+  </body>
+  </html>
+
